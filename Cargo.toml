@@ -6,6 +6,7 @@ edition = "2018"
 license = "MIT"
 description = "Fork of handlr with regex support"
 resolver = "2"
+repository = "https://github.com/Anomalocaridid/handlr-regex"
 
 [dependencies]
 pest = "2.1.3"
