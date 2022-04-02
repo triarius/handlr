@@ -388,8 +388,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "handlr"
-version = "0.6.4"
+name = "handlr-regex"
+version = "0.7.0"
 dependencies = [
  "aho-corasick",
  "ascii_table",

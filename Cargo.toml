@@ -1,10 +1,10 @@
 [package]
-name = "handlr"
-version = "0.6.4"
-authors = ["Gregory <gregory.mkv@gmail.com>"]
+name = "handlr-regex"
+version = "0.7.0"
+authors = ["Duncan Russell <Duncan@anomalocaris.xyz>", "Gregory <gregory.mkv@gmail.com>"]
 edition = "2018"
 license = "MIT"
-description = "Manage mimeapps.list and default applications with ease"
+description = "Fork of handlr with regex support"
 resolver = "2"
 
 [dependencies]
