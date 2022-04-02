@@ -1,6 +1,8 @@
-<h1 align=center> <img src="https://user-images.githubusercontent.com/11352152/82113733-3f9c9800-9726-11ea-977d-a2f43e5d392e.png" width=64 align=top /><br/>handlr</h1>
+<h1 align=center> <img src="https://user-images.githubusercontent.com/11352152/82113733-3f9c9800-9726-11ea-977d-a2f43e5d392e.png" width=64 align=top /><br/>handlr-regex</h1>
 
-Manage your default applications with ease using `handlr`!
+Manage your default applications with ease using `handlr`! Now with the power of [regular expressions](#setting-regex-handlers)!
+
+Fork of the original [handlr](https://github.com/chmln/handlr)
 
 ## Features
 
