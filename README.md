@@ -110,27 +110,27 @@ For more information:
 ### Arch Linux
 
 ```sh
-yay -S handlr-bin
+paru -S handlr-regex-bin
 ```
 
 Optionally you can also install `xdg-utils-handlr` to replace `xdg-open`:
 
 ```sh
-yay -S xdg-utils-handlr
+paru -S xdg-utils-handlr
 ```
 
 ### Rust/Cargo
 
 ```sh
-cargo install handlr
+cargo install handlr-regex
 ```
 
 ### Binaries
 
-1. Download the latest [release binary](https://github.com/chmln/handlr/releases) and put it somewhere in `$PATH`
+1. Download the latest [release binary](https://github.com/Anomalocaridid/handlr/releases) and put it somewhere in `$PATH`
 2. Download completions for fish:
 ```sh
-curl https://raw.githubusercontent.com/chmln/handlr/master/completions/handlr.fish --create-dirs -o ~/.config/fish/completions/handlr.fish
+curl https://raw.githubusercontent.com/Anomalocaridid/handlr/master/completions/handlr.fish --create-dirs -o ~/.config/fish/completions/handlr.fish
 ```
 
 ## Attribution
