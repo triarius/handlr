@@ -26,7 +26,7 @@ impl SystemApps {
             .list_data_files_once("applications")
             .into_iter()
             .filter(|p| {
-                p.extension().map(|x| x.to_str()).flatten() == Some("desktop")
+                p.extension().and_then(|x| x.to_str()) == Some("desktop")
             })
             .filter_map(|p| {
                 Some((

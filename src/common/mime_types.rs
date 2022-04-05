@@ -59,7 +59,7 @@ pub struct MimeOrExtension(pub Mime);
 impl FromStr for MimeOrExtension {
     type Err = Error;
     fn from_str(s: &str) -> Result<Self> {
-        let mime = if s.starts_with(".") {
+        let mime = if s.starts_with('.') {
             MimeType::from_ext(s)?
         } else {
             match Mime::from_str(s)? {
@@ -105,7 +105,10 @@ mod tests {
             "application/x-shellscript"
         );
         assert_eq!(
-            MimeType::try_from(Path::new("./tests/SettingsWidgetFdoSecrets.ui"))?.0,
+            MimeType::try_from(Path::new(
+                "./tests/SettingsWidgetFdoSecrets.ui"
+            ))?
+            .0,
             "application/x-designer"
         );
 

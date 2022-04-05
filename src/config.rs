@@ -34,8 +34,7 @@ impl Config {
         let terminal_entry = crate::apps::APPS
             .get_handler(&Mime::from_str("x-scheme-handler/terminal").unwrap())
             .ok()
-            .map(|h| h.get_entry().ok())
-            .flatten();
+            .and_then(|h| h.get_entry().ok());
 
         terminal_entry
             .or_else(|| {
@@ -43,8 +42,7 @@ impl Config {
                     .ok()?
                     .find(|(_handler, entry)| {
                         entry.categories.contains_key("TerminalEmulator")
-                    })
-                    .map(|e| e.clone())?;
+                    })?;
 
                 crate::utils::notify(
                     "handlr",
@@ -93,14 +91,14 @@ impl Config {
         let output = {
             process
                 .stdin
-                .ok_or(Error::Selector(self.selector.clone()))?
+                .ok_or_else(|| Error::Selector(self.selector.clone()))?
                 .write_all(opts.join("\n").as_bytes())?;
 
             let mut output = String::with_capacity(24);
 
             process
                 .stdout
-                .ok_or(Error::Selector(self.selector.clone()))?
+                .ok_or_else(|| Error::Selector(self.selector.clone()))?
                 .read_to_string(&mut output)?;
 
             output.trim_end().to_owned()

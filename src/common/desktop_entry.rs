@@ -110,12 +110,14 @@ fn parse_file(path: &Path) -> Option<DesktopEntry> {
     let raw_entry = freedesktop_entry_parser::parse_entry(&path).ok()?;
     let section = raw_entry.section("Desktop Entry");
 
-    let mut entry = DesktopEntry::default();
-    entry.file_name = path.file_name()?.to_owned();
+    let mut entry = DesktopEntry {
+        file_name: path.file_name()?.to_owned(),
+        ..Default::default()
+    };
 
     for attr in section.attrs().into_iter().filter(|a| a.has_value()) {
         match attr.name {
-            "Name" if entry.name == "" => {
+            "Name" if entry.name.is_empty() => {
                 entry.name = attr.value.unwrap().into();
             }
             "Exec" => entry.exec = attr.value.unwrap().into(),
@@ -123,7 +125,7 @@ fn parse_file(path: &Path) -> Option<DesktopEntry> {
                 entry.mimes = attr
                     .value
                     .unwrap()
-                    .split(";")
+                    .split(';')
                     .filter_map(|m| Mime::from_str(m).ok())
                     .collect::<Vec<_>>();
             }
@@ -132,7 +134,7 @@ fn parse_file(path: &Path) -> Option<DesktopEntry> {
                 entry.categories = attr
                     .value
                     .unwrap()
-                    .split(";")
+                    .split(';')
                     .filter(|s| !s.is_empty())
                     .map(|cat| (cat.to_owned(), ()))
                     .collect();

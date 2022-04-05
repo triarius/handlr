@@ -53,7 +53,7 @@ impl MimeApps {
         match self.default_apps.get(mime) {
             Some(handlers) if CONFIG.enable_selector && handlers.len() > 1 => {
                 let handlers = handlers
-                    .into_iter()
+                    .iter()
                     .map(|h| (h, h.get_entry().unwrap().name))
                     .collect::<Vec<_>>();
 
@@ -84,7 +84,7 @@ impl MimeApps {
             .get(mime)
             .map(|h| h.get(0).unwrap().clone())
             .or_else(|| self.system_apps.get_handler(mime))
-            .ok_or(Error::NotFound(mime.to_string()))
+            .ok_or_else(|| Error::NotFound(mime.to_string()))
     }
 
     pub fn show_handler(&self, mime: &Mime, output_json: bool) -> Result<()> {
@@ -147,7 +147,7 @@ impl MimeApps {
                             .next()
                             .unwrap()
                             .as_str()
-                            .split(";")
+                            .split(';')
                             .filter(|s| !s.is_empty())
                             .unique()
                             .filter_map(|s| Handler::from_str(s).ok())

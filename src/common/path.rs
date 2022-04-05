@@ -25,7 +25,7 @@ impl UserPath {
 impl FromStr for UserPath {
     type Err = Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let normalized = match url::Url::parse(&s) {
+        let normalized = match url::Url::parse(s) {
             Ok(url) if url.scheme() == "file" => {
                 let path = url
                     .to_file_path()
@@ -45,7 +45,7 @@ impl Display for UserPath {
     fn fmt(&self, fmt: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
             Self::File(f) => fmt.write_str(&f.to_string_lossy().to_string()),
-            Self::Url(u) => fmt.write_str(&u.to_string()),
+            Self::Url(u) => fmt.write_str(u.as_ref()),
         }
     }
 }

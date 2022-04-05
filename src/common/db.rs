@@ -1,6 +1,6 @@
 use crate::Result;
 
-static CUSTOM_MIMES: &[&'static str] = &[
+static CUSTOM_MIMES: &[&str] = &[
     "inode/directory",
     "x-scheme-handler/http",
     "x-scheme-handler/https",
