@@ -74,9 +74,9 @@ fn generate_manpage(cmd: &clap::Command) -> DynResult {
     let is_main_cmd = old_name == "handlr-regex";
 
     let cmd = if is_main_cmd {
-        cmd.clone()
+        cmd.clone().name("handlr")
     } else {
-        cmd.clone().name(format!("handlr-regex-{}", old_name))
+        cmd.clone().name(format!("handlr-{}", old_name))
     };
 
     let man = clap_mangen::Man::new(cmd.clone());
@@ -85,20 +85,15 @@ fn generate_manpage(cmd: &clap::Command) -> DynResult {
     // Render man page
     man.render(&mut buffer)?;
 
-    // Tweak man page
-    let (regex, replace) = if is_main_cmd {
-        // For main man page, replace instances of handlr-regex with handlr except the name section
-        (r"handlr\\-regex\\", r"handlr\")
-    } else {
-        // For subcommands, replace dash in synopsis command name with space
-        (
-            r"handlr\\-regex\\-(?P<name>[[:alpha:]]+)\\",
-            r"handlr $name\",
-        )
-    };
+    // Add "-regex" to (sub)command name
+    let buffer =
+        regex::bytes::Regex::new(r"handlr(?P<name>\\-[[:alpha:]]+)? \\-")?
+            .replace(&buffer, r"handlr-regex$name -".as_bytes());
 
-    let re = regex::bytes::Regex::new(regex)?;
-    let buffer = re.replace_all(&buffer, replace.as_bytes());
+    // Replace dash in subcommands' synopsis command names with a space
+    let buffer =
+        regex::bytes::Regex::new(r"handlr\\-(?P<name>[[:alpha:]]+)\\")?
+            .replace(&buffer, r"handlr $name\".as_bytes());
 
     let out_dir = dist_dir();
 
