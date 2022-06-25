@@ -95,7 +95,7 @@ fn generate_manpage(cmd: &clap::Command) -> DynResult {
         regex::bytes::Regex::new(r"handlr\\-(?P<name>[[:alpha:]]+)\\")?
             .replace(&buffer, r"handlr $name\".as_bytes());
 
-    let out_dir = dist_dir();
+    let out_dir = dist_dir().join("man1");
 
     // Write man page to file
     fs::create_dir_all(&out_dir)?;
