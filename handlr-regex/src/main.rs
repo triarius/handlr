@@ -4,7 +4,7 @@ use handlr_regex::{
     cli::Cmd,
     common::{self, Handler},
     config::CONFIG,
-    error::{Error, Result},
+    error::{ErrorKind, Result},
     utils,
 };
 use once_cell::sync::Lazy;
@@ -83,7 +83,7 @@ fn main() -> Result<()> {
     }();
 
     match (res, atty::is(atty::Stream::Stdout)) {
-        (Err(e), _) if matches!(e, Error::Cancelled) => {
+        (Err(e), _) if matches!(*e.kind, ErrorKind::Cancelled) => {
             std::process::exit(1);
         }
         (Err(e), true) => {

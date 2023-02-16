@@ -1,4 +1,6 @@
-use crate::{apps::SystemApps, common::Handler, Error, Result, CONFIG};
+use crate::{
+    apps::SystemApps, common::Handler, Error, ErrorKind, Result, CONFIG,
+};
 use mime::Mime;
 use once_cell::sync::Lazy;
 use pest::Parser;
@@ -72,7 +74,7 @@ impl MimeApps {
                 Ok(handler)
             }
             Some(handlers) => Ok(handlers.get(0).unwrap().clone()),
-            None => Err(Error::NotFound(mime.to_string())),
+            None => Err(Error::from(ErrorKind::NotFound(mime.to_string()))),
         }
     }
 
@@ -84,7 +86,7 @@ impl MimeApps {
             .get(mime)
             .map(|h| h.get(0).unwrap().clone())
             .or_else(|| self.system_apps.get_handler(mime))
-            .ok_or_else(|| Error::NotFound(mime.to_string()))
+            .ok_or_else(|| Error::from(ErrorKind::NotFound(mime.to_string())))
     }
 
     pub fn show_handler(&self, mime: &Mime, output_json: bool) -> Result<()> {

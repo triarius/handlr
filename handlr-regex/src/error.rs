@@ -1,5 +1,22 @@
 #[derive(Debug, thiserror::Error)]
-pub enum Error {
+#[error(transparent)]
+pub struct Error {
+    pub kind: Box<ErrorKind>,
+}
+
+impl<E> From<E> for Error
+where
+    ErrorKind: From<E>,
+{
+    fn from(err: E) -> Self {
+        Error {
+            kind: Box::new(ErrorKind::from(err)),
+        }
+    }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum ErrorKind {
     #[error(transparent)]
     ParseApps(#[from] pest::error::Error<crate::apps::MimeappsRule>),
     #[error(transparent)]

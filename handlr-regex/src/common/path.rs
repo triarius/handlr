@@ -1,6 +1,6 @@
 use url::Url;
 
-use crate::{common::MimeType, Error, Result};
+use crate::{common::MimeType, Error, ErrorKind, Result};
 use std::{
     convert::TryFrom,
     fmt::{Display, Formatter},
@@ -27,9 +27,9 @@ impl FromStr for UserPath {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let normalized = match url::Url::parse(s) {
             Ok(url) if url.scheme() == "file" => {
-                let path = url
-                    .to_file_path()
-                    .map_err(|_| Error::BadPath(url.path().to_owned()))?;
+                let path = url.to_file_path().map_err(|_| {
+                    Error::from(ErrorKind::BadPath(url.path().to_owned()))
+                })?;
 
                 Self::File(path)
             }
@@ -44,7 +44,7 @@ impl FromStr for UserPath {
 impl Display for UserPath {
     fn fmt(&self, fmt: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
-            Self::File(f) => fmt.write_str(&f.to_string_lossy().to_string()),
+            Self::File(f) => fmt.write_str(&f.to_string_lossy()),
             Self::Url(u) => fmt.write_str(u.as_ref()),
         }
     }

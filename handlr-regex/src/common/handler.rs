@@ -1,6 +1,6 @@
 use crate::{
     common::{DesktopEntry, ExecMode},
-    Error, Result,
+    Error, ErrorKind, Result,
 };
 use std::{
     convert::TryFrom, ffi::OsString, fmt::Display, path::PathBuf, str::FromStr,
@@ -32,8 +32,9 @@ impl Handler {
         xdg::BaseDirectories::new().ok()?.find_data_file(path)
     }
     pub fn resolve(name: OsString) -> Result<Self> {
-        let path = Self::get_path(&name)
-            .ok_or_else(|| Error::NotFound(name.to_string_lossy().into()))?;
+        let path = Self::get_path(&name).ok_or_else(|| {
+            ErrorKind::NotFound(name.to_string_lossy().into())
+        })?;
         DesktopEntry::try_from(path)?;
         Ok(Self(name))
     }

@@ -1,7 +1,7 @@
 use crate::{
     apps::{ConfigHandler, SystemApps},
     common::Handler,
-    Error, Result,
+    Error, ErrorKind, Result,
 };
 use mime::Mime;
 use once_cell::sync::Lazy;
@@ -62,7 +62,7 @@ impl Config {
                 Some(entry.1)
             })
             .map(|e| e.exec)
-            .ok_or(Error::NoTerminal)
+            .ok_or(Error::from(ErrorKind::NoTerminal))
     }
     pub fn load() -> Self {
         confy::load("handlr").unwrap()
@@ -91,21 +91,21 @@ impl Config {
         let output = {
             process
                 .stdin
-                .ok_or_else(|| Error::Selector(self.selector.clone()))?
+                .ok_or_else(|| ErrorKind::Selector(self.selector.clone()))?
                 .write_all(opts.join("\n").as_bytes())?;
 
             let mut output = String::with_capacity(24);
 
             process
                 .stdout
-                .ok_or_else(|| Error::Selector(self.selector.clone()))?
+                .ok_or_else(|| ErrorKind::Selector(self.selector.clone()))?
                 .read_to_string(&mut output)?;
 
             output.trim_end().to_owned()
         };
 
         if output.is_empty() {
-            Err(Error::Cancelled)
+            Err(Error::from(ErrorKind::Cancelled))
         } else {
             Ok(output)
         }

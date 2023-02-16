@@ -1,4 +1,4 @@
-use crate::{Error, Result};
+use crate::{Error, ErrorKind, Result};
 use aho_corasick::AhoCorasick;
 use mime::Mime;
 use std::{
@@ -107,7 +107,7 @@ impl DesktopEntry {
 }
 
 fn parse_file(path: &Path) -> Option<DesktopEntry> {
-    let raw_entry = freedesktop_entry_parser::parse_entry(&path).ok()?;
+    let raw_entry = freedesktop_entry_parser::parse_entry(path).ok()?;
     let section = raw_entry.section("Desktop Entry");
 
     let mut entry = DesktopEntry {
@@ -153,7 +153,7 @@ fn parse_file(path: &Path) -> Option<DesktopEntry> {
 impl TryFrom<PathBuf> for DesktopEntry {
     type Error = Error;
     fn try_from(path: PathBuf) -> Result<DesktopEntry> {
-        parse_file(&path).ok_or(Error::BadEntry(path))
+        parse_file(&path).ok_or(Error::from(ErrorKind::BadEntry(path)))
     }
 }
 
