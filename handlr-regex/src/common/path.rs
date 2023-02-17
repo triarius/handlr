@@ -1,3 +1,5 @@
+use ascii_table::AsciiTable;
+use mime::Mime;
 use url::Url;
 
 use crate::{common::MimeType, Error, ErrorKind, Result};
@@ -14,11 +16,12 @@ pub enum UserPath {
 }
 
 impl UserPath {
-    pub fn get_mime(&self) -> Result<MimeType> {
-        match self {
+    pub fn get_mime(&self) -> Result<Mime> {
+        Ok(match self {
             Self::Url(url) => Ok(url.into()),
             Self::File(f) => MimeType::try_from(f.as_path()),
-        }
+        }?
+        .0)
     }
 }
 
@@ -48,4 +51,37 @@ impl Display for UserPath {
             Self::Url(u) => fmt.write_str(u.as_ref()),
         }
     }
+}
+
+pub fn mime_table(
+    paths: &Vec<UserPath>,
+    output_json: bool,
+) -> Result<(), Error> {
+    if output_json {
+        let rows = paths
+            .iter()
+            .map(|path| {
+                Ok(json::object! {
+                    path: path.to_string(),
+                    mime: path.get_mime()?.essence_str().to_owned()
+                })
+            })
+            .collect::<Result<json::Array>>()?;
+        println!("{}", json::stringify(rows));
+    } else {
+        let rows = paths
+            .iter()
+            .map(|path| {
+                Ok(vec![
+                    path.to_string(),
+                    path.get_mime()?.essence_str().to_owned(),
+                ])
+            })
+            .collect::<Result<Vec<Vec<String>>>>()?;
+
+        let table = AsciiTable::default();
+        table.print(rows);
+    }
+
+    Ok(())
 }

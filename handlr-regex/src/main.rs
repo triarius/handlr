@@ -2,7 +2,7 @@ use clap::Parser;
 use handlr_regex::{
     apps::{self, RegexHandler, APPS, REGEX_APPS},
     cli::Cmd,
-    common::{self, Handler},
+    common::{self, mime_table, Handler},
     config::CONFIG,
     error::{ErrorKind, Result},
     utils,
@@ -49,7 +49,7 @@ fn main() -> Result<()> {
                             .push(path.to_string())
                     } else {
                         handlers
-                            .entry(apps.get_handler(&path.get_mime()?.0)?)
+                            .entry(apps.get_handler(&path.get_mime()?)?)
                             .or_default()
                             .push(path.to_string());
                     }
@@ -61,6 +61,9 @@ fn main() -> Result<()> {
                 for (regex_handler, paths) in regex_handlers.into_iter() {
                     regex_handler.open(paths)?;
                 }
+            }
+            Cmd::Mime { paths, json } => {
+                mime_table(&paths, json)?;
             }
             Cmd::List { all } => {
                 apps.print(all)?;
