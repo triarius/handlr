@@ -125,6 +125,10 @@ mod tests {
             .0,
             "application/x-designer"
         );
+        assert_eq!(
+            MimeType::try_from(Path::new("./tests/empty.txt"))?.0,
+            "text/plain"
+        );
 
         Ok(())
     }
