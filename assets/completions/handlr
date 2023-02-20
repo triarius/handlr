@@ -4,7 +4,7 @@ _handlr()
     _init_completion || return
 
     if ((cword == 1)); then
-        COMPREPLY=($(compgen -W 'get help launch list open set unset' -- "$cur"))
+        COMPREPLY=($(compgen -W 'get help launch list open set unset mime' -- "$cur"))
     else
         case ${words[1]} in
             set | add)
@@ -14,7 +14,7 @@ _handlr()
                     COMPREPLY=($(compgen -W '$(handlr autocomplete -d | cut -f1)' -- "$cur"))
                 fi
                 ;;
-            open)
+            open | mime)
                 _filedir
                 ;;
             unset | get)

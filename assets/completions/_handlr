@@ -21,7 +21,8 @@ _handlr_commands() {
       'unset:Unset the default handler for mime/extension'
       'launch:Launch the handler for specified extension/mime with optional arguments'
       'get:Get handler for this mime/extension'
-      'add:Add a handler for given mime/extension Note that the first handler is the default'
+      'add:Add a handler for given mime/extension; note that the first handler is the default'
+      'mime:Get the mimetype of a path/URL'
   )
   _describe -t handlr-commands "command" subcommands
 }
@@ -30,7 +31,7 @@ _handlr_subcommand () {
   case "$words[1]" in
     (list)
       ;;
-    (open)
+    (open|mime)
       _alternative '1:filename/path:_files'
       ;;
     (get|unset)
