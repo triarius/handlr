@@ -6,7 +6,7 @@ section = { "[" ~ (section_char)+  ~ "]" }
 
 property = { name ~ "=" ~ value }
 name = { name_char+ }
-value = { value_char+ }
+value = { value_char* }
 
 comment = { "#" ~ name_char* }
 
